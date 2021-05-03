@@ -4,24 +4,24 @@ import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import * as ReactMarkdown from "react-markdown";
 import { putMemo } from "../indexeddb/memos";
 import { Button } from "../components/button";
-import {SaveModal} from '../components/save_modal'
+import { SaveModal } from "../components/save_modal";
+import { Link } from "react-router-dom";
+import { Header } from "../components/header";
 
-const {useState} =React
+const { useState } = React;
 
 const StorageKey = "pages/editor:text";
 
 export const Editor: React.FC = () => {
   const [text, setText] = useStateWithStorage("", StorageKey);
 
-  const [showModal, setShowmodal] = useState(false)
+  const [showModal, setShowmodal] = useState(false);
 
   return (
     <>
-      <Header>
-        EditorX
-        <HeaderControl>
-          <Button onClick={() => setShowmodal(true)}>Save</Button>
-        </HeaderControl>
+      <Header title="EditorX">
+        <LinkText to="/history">History</LinkText>
+        <Button onClick={() => setShowmodal(true)}>Save</Button>
       </Header>
       <Wrapper>
         <TextArea
@@ -38,9 +38,9 @@ export const Editor: React.FC = () => {
       </Wrapper>
       {showModal && (
         <SaveModal
-          onSave={(title: string):void => {
-            putMemo(title, text)
-            setShowmodal(false)
+          onSave={(title: string): void => {
+            putMemo(title, text);
+            setShowmodal(false);
           }}
           onCancel={() => setShowmodal(false)}
         />
@@ -48,27 +48,6 @@ export const Editor: React.FC = () => {
     </>
   );
 };
-
-const Header = styled.div`
-  align-content: center;
-  font-size: 60px;
-  height: 100px;
-  left: 0;
-  padding: 10px 20px;
-  position: fixed;
-  right: 0;
-  top: 0;
-  color: #f8f8f8;
-  display: flex;
-  justify-content: space-between;
-  background: #121212;
-`;
-
-const HeaderControl = styled.div`
-  height: 100px;
-  display: flex;
-  margin-top: 20px;
-`;
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -110,4 +89,35 @@ const Preview = styled.div`
   width: calc(50vw - 28px);
   outline: none;
   color: #f8f8f8;
+`;
+
+const LinkText = styled(Link)`
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  outline: none;
+  min-width: 100px;
+  height: 50px;
+  color: #ffffff;
+  padding: 0 16px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 50px;
+  border-radius: 100px;
+  cursor: pointer;
+  margin-right: 18px;
+  transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  &:hover {
+    background-color: #ffffff;
+    color: #121212;
+    transform: translateY(-2px);
+  }
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
 `;

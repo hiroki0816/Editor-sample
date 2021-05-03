@@ -21,14 +21,15 @@ const StyledButton = styled.button`
   border: none;
   outline: none;
   box-shadow: none;
-  width: 100px;
+  min-width: 100px;
   height: 50px;
   color: #ffffff;
+  padding: 0 16px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 100px;
   cursor: pointer;
-  transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 
   &:hover {
     box-shadow: 0px 0px 16px #55c341;
