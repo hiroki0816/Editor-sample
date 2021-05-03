@@ -1,16 +1,28 @@
 import * as React from "react";
 import styled from "styled-components";
-import {useStateWithStorage} from '../hooks/use_state_with_storage'
-import *as ReactMarkdown from 'react-markdown'
+import { useStateWithStorage } from "../hooks/use_state_with_storage";
+import * as ReactMarkdown from "react-markdown";
+import { putMemo } from "../indexeddb/memos";
+import { Button } from "../components/button";
+import {SaveModal} from '../components/save_modal'
+
+const {useState} =React
 
 const StorageKey = "pages/editor:text";
 
 export const Editor: React.FC = () => {
-  const [text, setText] = useStateWithStorage('', StorageKey)
+  const [text, setText] = useStateWithStorage("", StorageKey);
+
+  const [showModal, setShowmodal] = useState(false)
 
   return (
     <>
-      <Header>EditorX</Header>
+      <Header>
+        EditorX
+        <HeaderControl>
+          <Button onClick={() => setShowmodal(true)}>Save</Button>
+        </HeaderControl>
+      </Header>
       <Wrapper>
         <TextArea
           onChange={(event) => {
@@ -21,16 +33,24 @@ export const Editor: React.FC = () => {
           value={text}
         />
         <Preview>
-            <ReactMarkdown>
-                {text}
-            </ReactMarkdown>
+          <ReactMarkdown>{text}</ReactMarkdown>
         </Preview>
       </Wrapper>
+      {showModal && (
+        <SaveModal
+          onSave={(title: string):void => {
+            putMemo(title, text)
+            setShowmodal(false)
+          }}
+          onCancel={() => setShowmodal(false)}
+        />
+      )}
     </>
   );
 };
 
 const Header = styled.div`
+  align-content: center;
   font-size: 60px;
   height: 100px;
   left: 0;
@@ -39,6 +59,15 @@ const Header = styled.div`
   right: 0;
   top: 0;
   color: #f8f8f8;
+  display: flex;
+  justify-content: space-between;
+  background: #121212;
+`;
+
+const HeaderControl = styled.div`
+  height: 100px;
+  display: flex;
+  margin-top: 20px;
 `;
 
 const Wrapper = styled.div`
@@ -47,6 +76,7 @@ const Wrapper = styled.div`
   position: fixed;
   right: 0;
   top: 100px;
+  background: #121212;
 `;
 
 const TextArea = styled.textarea`
